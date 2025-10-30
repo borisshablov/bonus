@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр данных - Google Таблицы</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-gray-400-rgb: 119, 124, 124;
+            --color-gray-300-rgb: 167, 169, 169;
+            --color-gray-200-rgb: 245, 245, 245;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            padding: var(--space-20);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: var(--space-32);
+            padding: var(--space-24);
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+        }
+
+        h1 {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--space-12);
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-base);
+        }
+
+        .search-panel {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-bottom: var(--space-24);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+        }
+
+        .form-control {
+            flex: 1;
+            padding: var(--space-12) var(--space-16);
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .btn {
+            padding: var(--space-12) var(--space-24);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s;
+            border: none;
+        }
+
+        .btn--primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn--primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn--secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .btn--secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .filter-section {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            margin-bottom: var(--space-24);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-16);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            margin-bottom: var(--space-8);
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+        }
+
+        .stats {
+            display: flex;
+            gap: var(--space-24);
+            padding: var(--space-16);
+            background: var(--color-secondary);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-sm);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+        }
+
+        .stat-label {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .stat-value {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .table-container {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background: var(--color-primary);
+            color: white;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            padding: var(--space-16) var(--space-12);
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            background: var(--color-primary-hover);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--color-border);
+            transition: background-color 0.15s;
+        }
+
+        tbody tr:hover {
+            background-color: var(--color-secondary);
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: rgba(var(--color-brown-600-rgb), 0.03);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            tbody tr:nth-child(even) {
+                background-color: rgba(var(--color-gray-400-rgb), 0.05);
+            }
+        }
+
+        td {
+            padding: var(--space-12);
+            white-space: nowrap;
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--space-32);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-lg);
+        }
+
+        .loading::before {
+            content: "⏳ ";
+            font-size: var(--font-size-2xl);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-32);
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-16);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Просмотр данных Google Таблицы</h1>
+            <p class="subtitle">Быстрый поиск и фильтрация данных в реальном времени</p>
+        </header>
+
+        <div class="search-panel">
+            <div class="search-bar">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="form-control" 
+                    placeholder="🔍 Поиск по всем колонкам..."
+                >
+                <button id="clearSearch" class="btn btn--secondary">Очистить</button>
+            </div>
+        </div>
+
+        <div id="filterSection" class="filter-section" style="display: none;">
+            <div class="filter-header">
+                <h3 style="font-size: var(--font-size-lg); margin: 0;">Фильтры по колонкам</h3>
+                <button id="resetFilters" class="btn btn--secondary">Сбросить все</button>
+            </div>
+            <div id="filterControls" class="filter-grid"></div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Всего строк</span>
+                    <span class="stat-value" id="totalRows">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Найдено</span>
+                    <span class="stat-value" id="filteredRows">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div id="tableContent" class="loading">
+                <span class="spinner">⚙️</span> Загрузка данных из Google Таблицы...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // КОНФИГУРАЦИЯ - ИЗМЕНИТЕ ЭТИ ЗНАЧЕНИЯ
+        // ========================================
+        
+        const CONFIG = {
+            // ⚙️ URL вашего Apps Script веб-приложения
+            // Как получить:
+            // 1. Откройте Google Таблицу
+            // 2. Расширения → Apps Script
+            // 3. Вставьте код (см. комментарий ниже)
+            // 4. Развернуть → Новое развертывание → Веб-приложение
+            // 5. Доступ: "Все (даже анонимные)"
+            // 6. Скопируйте URL сюда ↓
+            APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzGomaQVHzg8VZFalRMGl6gXHMjhAhvqZPobRyrCKhoCzgqjAi_itZbBP3qPowLB-T_Fw/exec',
+            
+            // 📋 Название листа в Google Таблице (если не указано, берется первый лист)
+            SHEET_NAME: '',
+            
+            // 🚀 Автозагрузка при открытии страницы
+            AUTO_LOAD: true,
+            
+            // 🔄 Интервал автообновления (в миллисекундах, 0 = отключено)
+            // Примеры: 60000 = 1 минута, 300000 = 5 минут
+            AUTO_REFRESH_INTERVAL: 0,
+            
+            // 🧪 ДЕМО-РЕЖИМ (для тестирования)
+            // Установите true чтобы увидеть как работает сайт с демо-данными
+            // После настройки Apps Script установите false
+            USE_DEMO_DATA: false
+        };
+
+        /* 
+        ============================================
+        📝 КОД ДЛЯ APPS SCRIPT (скопируйте в редактор Apps Script):
+        ============================================
+        
+        function doGet(e) {
+          const sheet = SpreadsheetApp.getActiveSpreadsheet()
+            .getSheetByName(e.parameter.sheet || 'Лист1');
+          
+          const data = sheet.getDataRange().getValues();
+          
+          return ContentService
+            .createTextOutput(JSON.stringify(data))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+        
+        ============================================
+        📌 ИНСТРУКЦИЯ ПО РАЗМЕЩЕНИЮ НА GITHUB PAGES:
+        ============================================
+        
+        1. Создайте аккаунт на github.com (если нет)
+        
+        2. Создайте новый репозиторий:
+           - Нажмите "+" → "New repository"
+           - Название: google-sheets-viewer (или любое)
+           - Публичный (Public)
+           - ✅ Add a README file
+           - Create repository
+        
+        3. Загрузите этот HTML файл:
+           - Add file → Upload files
+           - Перетащите файл и переименуйте в index.html
+           - Commit changes
+        
+        4. Включите GitHub Pages:
+           - Settings → Pages
+           - Source: Branch "main", Folder "/ (root)"
+           - Save
+        
+        5. Готово! Ваш сайт доступен по адресу:
+           https://ваш-username.github.io/google-sheets-viewer/
+        
+        ============================================
+        */
+
+        // ========================================
+        // КОД ПРИЛОЖЕНИЯ
+        // ========================================
+        
+        let allData = [];
+        let headers = [];
+        let filteredData = [];
+        let searchTerm = '';
+        let columnFilters = {};
+        let sortColumn = -1;
+        let sortAsc = true;
+
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        const resetFiltersBtn = document.getElementById('resetFilters');
+        const tableContent = document.getElementById('tableContent');
+        const filterSection = document.getElementById('filterSection');
+        const filterControls = document.getElementById('filterControls');
+        const totalRowsEl = document.getElementById('totalRows');
+        const filteredRowsEl = document.getElementById('filteredRows');
+
+        // Поиск в реальном времени
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value.toLowerCase().trim();
+            applyFiltersAndSearch();
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchTerm = '';
+            applyFiltersAndSearch();
+        });
+
+        resetFiltersBtn.addEventListener('click', () => {
+            columnFilters = {};
+            const selects = filterControls.querySelectorAll('select');
+            selects.forEach(select => select.value = '');
+            searchInput.value = '';
+            searchTerm = '';
+            applyFiltersAndSearch();
+        });
+
+        async function loadData() {
+            try {
+                let data;
+                
+                // Демо-режим для тестирования
+                if (CONFIG.USE_DEMO_DATA) {
+                    data = getDemoData();
+                    console.log('📊 Загружены демо-данные');
+                } else {
+                    // Реальная загрузка из Apps Script
+                    let url = CONFIG.APPS_SCRIPT_URL;
+                    if (CONFIG.SHEET_NAME) {
+                        url += `?sheet=${encodeURIComponent(CONFIG.SHEET_NAME)}`;
+                    }
+                    
+                    console.log('🔗 Запрос к:', url);
+                    
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        redirect: 'follow'
+                    });
+                    
+                    console.log('📡 Статус ответа:', response.status);
+                    console.log('📋 Заголовки:', response.headers);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ошибка: ${response.status} - ${response.statusText}`);
+                    }
+                    
+                    const text = await response.text();
+                    console.log('📄 Получен текст (первые 200 символов):', text.substring(0, 200));
+                    
+                    data = JSON.parse(text);
+                }
+                
+                if (!Array.isArray(data) || data.length === 0) {
+                    showEmptyState('Нет данных в таблице');
+                    return;
+                }
+
+                headers = data[0];
+                allData = data.slice(1);
+                filteredData = [...allData];
+                
+                displayTable();
+                createFilters();
+                filterSection.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Ошибка загрузки:', error);
+                showEmptyState('❌ Ошибка загрузки данных\n\n' + error.message + '\n\nПроверьте настройки в CONFIG');
+            }
+        }
+
+        function applyFiltersAndSearch() {
+            filteredData = allData.filter(row => {
+                // Фильтры по колонкам
+                const matchesFilters = Object.entries(columnFilters).every(([colIndex, value]) => {
+                    if (!value) return true;
+                    return String(row[colIndex]) === String(value);
+                });
+                
+                // Глобальный поиск
+                const matchesSearch = !searchTerm || row.some(cell => 
+                    String(cell).toLowerCase().includes(searchTerm)
+                );
+                
+                return matchesFilters && matchesSearch;
+            });
+            
+            displayTable();
+        }
+
+        function createFilters() {
+            filterControls.innerHTML = '';
+            
+            headers.forEach((header, colIndex) => {
+                const uniqueValues = [...new Set(allData.map(row => row[colIndex]))]
+                    .filter(v => v !== null && v !== undefined && v !== '')
+                    .sort();
+                
+                if (uniqueValues.length > 1 && uniqueValues.length < 100) {
+                    const formGroup = document.createElement('div');
+                    formGroup.className = 'form-group';
+                    
+                    const label = document.createElement('label');
+                    label.className = 'form-label';
+                    label.textContent = header;
+                    
+                    const select = document.createElement('select');
+                    select.className = 'form-control';
+                    select.dataset.column = colIndex;
+                    
+                    const allOption = document.createElement('option');
+                    allOption.value = '';
+                    allOption.textContent = `Все (${uniqueValues.length})`;
+                    select.appendChild(allOption);
+                    
+                    uniqueValues.forEach(value => {
+                        const option = document.createElement('option');
+                        option.value = value;
+                        option.textContent = value;
+                        select.appendChild(option);
+                    });
+                    
+                    select.addEventListener('change', (e) => {
+                        const col = e.target.dataset.column;
+                        columnFilters[col] = e.target.value;
+                        applyFiltersAndSearch();
+                    });
+                    
+                    formGroup.appendChild(label);
+                    formGroup.appendChild(select);
+                    filterControls.appendChild(formGroup);
+                }
+            });
+        }
+
+        function sortByColumn(colIndex) {
+            if (sortColumn === colIndex) {
+                sortAsc = !sortAsc;
+            } else {
+                sortColumn = colIndex;
+                sortAsc = true;
+            }
+            
+            filteredData.sort((a, b) => {
+                const aVal = String(a[colIndex]);
+                const bVal = String(b[colIndex]);
+                
+                const numA = parseFloat(aVal.replace(/[^\d.-]/g, ''));
+                const numB = parseFloat(bVal.replace(/[^\d.-]/g, ''));
+                
+                let comparison;
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    comparison = numA - numB;
+                } else {
+                    comparison = aVal.localeCompare(bVal, 'ru');
+                }
+                
+                return sortAsc ? comparison : -comparison;
+            });
+            
+            displayTable();
+        }
+
+        function displayTable() {
+            if (filteredData.length === 0) {
+                tableContent.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><h3>Ничего не найдено</h3><p>Попробуйте изменить параметры поиска или фильтры</p></div>';
+                totalRowsEl.textContent = allData.length;
+                filteredRowsEl.textContent = '0';
+                return;
+            }
+
+            let html = '<div class="table-wrapper"><table><thead><tr>';
+            
+            headers.forEach((header, index) => {
+                const sortIcon = sortColumn === index ? (sortAsc ? ' ▲' : ' ▼') : '';
+                html += `<th onclick="sortByColumn(${index})">${escapeHtml(header)}${sortIcon}</th>`;
+            });
+            
+            html += '</tr></thead><tbody>';
+
+            filteredData.forEach(row => {
+                html += '<tr>';
+                row.forEach(cell => {
+                    const cellValue = String(cell);
+                    let displayValue = escapeHtml(cellValue);
+                    
+                    // Подсветка результатов поиска
+                    if (searchTerm && cellValue.toLowerCase().includes(searchTerm)) {
+                        const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
+                        displayValue = displayValue.replace(regex, '<mark style="background: #ffeb3b; padding: 2px 4px; border-radius: 3px;">$1</mark>');
+                    }
+                    
+                    html += `<td>${displayValue}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+            tableContent.innerHTML = html;
+
+            totalRowsEl.textContent = allData.length;
+            filteredRowsEl.textContent = filteredData.length;
+        }
+
+        function showEmptyState(message) {
+            tableContent.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📄</div><h3>${escapeHtml(message)}</h3></div>`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Демо-данные для тестирования
+        function getDemoData() {
+            return [
+                ['Дата', 'Категория', 'Товар', 'Количество', 'Цена', 'Сумма', 'Статус'],
+                ['2024-01-15', 'Электроника', 'Ноутбук', '2', '45000', '90000', 'Доставлено'],
+                ['2024-01-16', 'Мебель', 'Стул офисный', '5', '3500', '17500', 'В обработке'],
+                ['2024-01-17', 'Электроника', 'Мышь беспроводная', '10', '800', '8000', 'Доставлено'],
+                ['2024-01-18', 'Канцелярия', 'Ручка синяя', '100', '25', '2500', 'Доставлено'],
+                ['2024-01-19', 'Мебель', 'Стол письменный', '3', '12000', '36000', 'Отменено'],
+                ['2024-01-20', 'Электроника', 'Клавиатура', '8', '1500', '12000', 'Доставлено'],
+                ['2024-01-21', 'Канцелярия', 'Блокнот А5', '50', '120', '6000', 'В обработке'],
+                ['2024-01-22', 'Электроника', 'Монитор 24"', '4', '15000', '60000', 'Доставлено'],
+                ['2024-01-23', 'Мебель', 'Тумба', '2', '5500', '11000', 'Доставлено'],
+                ['2024-01-24', 'Канцелярия', 'Степлер', '15', '350', '5250', 'В обработке'],
+                ['2024-01-25', 'Электроника', 'Наушники', '12', '2500', '30000', 'Доставлено'],
+                ['2024-01-26', 'Мебель', 'Шкаф', '1', '25000', '25000', 'Доставлено'],
+                ['2024-01-27', 'Электроника', 'Веб-камера', '6', '3000', '18000', 'В обработке'],
+                ['2024-01-28', 'Канцелярия', 'Папка для документов', '30', '85', '2550', 'Доставлено']
+            ];
+        }
+
+        // Глобальная функция для сортировки (доступна из onclick)
+        window.sortByColumn = sortByColumn;
+
+        // Автозагрузка
+        if (CONFIG.AUTO_LOAD) {
+            loadData();
+        }
+
+        // Автообновление
+        if (CONFIG.AUTO_REFRESH_INTERVAL > 0) {
+            setInterval(loadData, CONFIG.AUTO_REFRESH_INTERVAL);
+        }
+    </script>
+</body>
+</html>
